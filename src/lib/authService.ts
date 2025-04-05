@@ -5,12 +5,16 @@ import {
   signOut
 } from "firebase/auth";
 import { auth } from "../../firebase/FirebaseConfig";
+import { createUserProfile, getUserProfile } from "./userProfileService";
 
 // Email/Password registration with verification email
 export const register = async (email: string, password: string) => {
   try {
     // Create the user with email and password
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    
+    // Create initial user profile in Firestore
+    await createUserProfile(userCredential.user.uid, email);
     
     // Send verification email
     await sendEmailVerification(userCredential.user);
@@ -82,4 +86,14 @@ export const resendVerificationEmail = async (user) => {
 // Get current authentication state
 export const getCurrentUser = () => {
   return auth.currentUser;
+};
+
+// Check if user has completed profile setup
+export const checkProfileCompletion = async (uid) => {
+  try {
+    const profile = await getUserProfile(uid);
+    return profile.profileCompleted;
+  } catch (error) {
+    return false;
+  }
 };
