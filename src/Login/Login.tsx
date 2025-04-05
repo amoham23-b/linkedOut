@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, Coffee, BriefcaseBusiness } from "lucide-react";
 import { currentUser } from "@/data/mockData";
+import { login } from "@/lib/authService";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -15,14 +16,22 @@ const Login = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simple mock login - always succeeds
-    toast({
-      title: "Welcome back!",
-      description: "Time to build your personal brand and irritate your connections!",
-    });
-    navigate("/");
+    try {
+      await login(email, password);
+      toast({
+        title: "Welcome back!",
+        description: "Time to build your personal brand and irritate your connections!",
+      });
+      navigate("/");
+    } catch (error) {
+      toast({
+        title: "Login failed",
+        description: error.message,
+        variant: "destructive"
+      });
+    }
   };
 
   return (

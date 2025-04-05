@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, Coffee, BriefcaseBusiness } from "lucide-react";
+import { register } from "@/lib/authService";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -20,15 +21,35 @@ const Signup = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  const handleSignup = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Simple mock signup - always succeeds
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+const handleSignup = async (e: React.FormEvent) => {
+  e.preventDefault();
+  
+  if (password !== confirmPassword) {
+    toast({
+      title: "Passwords don't match",
+      description: "Please make sure your passwords match",
+      variant: "destructive"
+    });
+    return;
+  }
+  
+  try {
+    await register(email, password);
     toast({
       title: "Welcome aboard!",
       description: "You've joined the most unprofessional professional network!",
     });
     navigate("/");
-  };
+  } catch (error) {
+    toast({
+      title: "Signup failed",
+      description: error.message,
+      variant: "destructive"
+    });
+  }
+};
 
   return (
     <div className="min-h-screen bg-linkedout-gray/30 flex items-center justify-center p-4">
@@ -96,11 +117,11 @@ const Signup = () => {
                 </label>
                 <div className="relative">
                   <Input
-                    id="password"
+                    id="confirmPassword"
                     type={showPassword ? "text" : "password"}
                     placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
                     required
                   />
                   <button
