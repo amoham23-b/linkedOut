@@ -1,26 +1,31 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, Coffee, BriefcaseBusiness } from "lucide-react";
-import { currentUser } from "@/data/mockData";
 
-const Login = () => {
+const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simple mock login - always succeeds
+    // Simple mock signup - always succeeds
     toast({
-      title: "Welcome back!",
-      description: "Time to build your personal brand and irritate your connections!",
+      title: "Welcome aboard!",
+      description: "You've joined the most unprofessional professional network!",
     });
     navigate("/");
   };
@@ -33,18 +38,24 @@ const Login = () => {
             <BriefcaseBusiness size={32} />
             LinkedOut
           </h1>
-          <p className="text-gray-600 mt-2">Where professionals come to pretend they're happy</p>
+          <p className="text-gray-600 mt-2">
+            Where professionals come to pretend they're happy
+          </p>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>Sign In</CardTitle>
-            <CardDescription>Enter your credentials to access your network of "connections"</CardDescription>
+            <CardTitle>Create Account</CardTitle>
+            <CardDescription>
+              Join your network of disillusioned professionals
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleLogin} className="space-y-4">
+            <form onSubmit={handleSignup} className="space-y-4">
               <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-medium">Email</label>
+                <label htmlFor="email" className="text-sm font-medium">
+                  Email
+                </label>
                 <Input
                   id="email"
                   type="email"
@@ -55,7 +66,9 @@ const Login = () => {
                 />
               </div>
               <div className="space-y-2">
-                <label htmlFor="password" className="text-sm font-medium">Password</label>
+                <label htmlFor="password" className="text-sm font-medium">
+                  Password
+                </label>
                 <div className="relative">
                   <Input
                     id="password"
@@ -75,20 +88,19 @@ const Login = () => {
                 </div>
               </div>
               <Button type="submit" className="w-full bg-linkedout-blue">
-                Sign In
+                Create Account
               </Button>
             </form>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
             <div className="text-center text-sm">
-              <a href="#" className="text-linkedout-blue hover:underline">Forgot Password?</a>
-            </div>
-            <div className="text-center text-sm">
-              Don't have an account?{" "}
-              <a href="./Signup" className="text-linkedout-blue hover:underline">Join LinkedOut</a>
+              Already have an account?{" "}
+              <a href="./LogIn" className="text-linkedout-blue hover:underline">
+                Sign in
+              </a>
             </div>
             <div className="flex items-center justify-center text-gray-500 text-xs">
-              <Coffee size={14} className="mr-1" /> 
+              <Coffee size={14} className="mr-1" />
               <span>Experience the corporate dread, one post at a time</span>
             </div>
           </CardFooter>
@@ -98,4 +110,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup;
