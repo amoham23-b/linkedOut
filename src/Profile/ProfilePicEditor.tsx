@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import Cropper from "react-easy-crop";
 import { Slider } from "@mui/material";
-import getCroppedImg from "@/lib/cropImage";
+import getCroppedImg from "@/Profile/cropImage";
 
 const getInitials = (name: string) => {
   return name

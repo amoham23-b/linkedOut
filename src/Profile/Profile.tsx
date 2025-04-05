@@ -3,7 +3,7 @@ import Header from "@/components/Header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { currentUser } from "@/data/mockData";
 import ResumeOptimizer from "@/components/ResumeOptimizer";
-import ProfilePicEditor from "@/components/ProfilePicEditor";
+import ProfilePicEditor from "@/Profile/ProfilePicEditor";
 
 const Profile = () => {
   return (
