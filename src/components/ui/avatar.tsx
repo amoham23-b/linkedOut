@@ -1,23 +1,48 @@
-// src/components/ui/avatar.tsx
-import React from 'react';
+import * as React from "react"
+import * as AvatarPrimitive from "@radix-ui/react-avatar"
 
-interface AvatarProps {
-  children: React.ReactNode;
-  className?: string;
-}
+import { cn } from "@/lib/utils"
 
-const AvatarImage = ({ src, alt }: { src: string; alt: string }) => (
-  <img src={src} alt={alt} className="w-full h-full object-cover rounded-full" />
-);
+const Avatar = React.forwardRef<
+  React.ElementRef<typeof AvatarPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root>
+>(({ className, ...props }, ref) => (
+  <AvatarPrimitive.Root
+    ref={ref}
+    className={cn(
+      "relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full",
+      className
+    )}
+    {...props}
+  />
+))
+Avatar.displayName = AvatarPrimitive.Root.displayName
 
-const AvatarFallback = ({ children }: { children: string }) => (
-  <div className="w-full h-full flex items-center justify-center text-white bg-gray-400 rounded-full">
-    {children}
-  </div>
-);
+const AvatarImage = React.forwardRef<
+  React.ElementRef<typeof AvatarPrimitive.Image>,
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Image>
+>(({ className, ...props }, ref) => (
+  <AvatarPrimitive.Image
+    ref={ref}
+    className={cn("aspect-square h-full w-full", className)}
+    {...props}
+  />
+))
+AvatarImage.displayName = AvatarPrimitive.Image.displayName
 
-const Avatar = ({ children, className }: AvatarProps) => (
-  <div className={`relative inline-block ${className}`}>{children}</div>
-);
+const AvatarFallback = React.forwardRef<
+  React.ElementRef<typeof AvatarPrimitive.Fallback>,
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback>
+>(({ className, ...props }, ref) => (
+  <AvatarPrimitive.Fallback
+    ref={ref}
+    className={cn(
+      "flex h-full w-full items-center justify-center rounded-full bg-muted",
+      className
+    )}
+    {...props}
+  />
+))
+AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName
 
-export { Avatar, AvatarImage, AvatarFallback };
+export { Avatar, AvatarImage, AvatarFallback }
