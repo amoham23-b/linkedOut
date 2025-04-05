@@ -24,7 +24,7 @@ const Login = () => {
         title: "Welcome back!",
         description: "Time to build your personal brand and irritate your connections!",
       });
-      navigate("/");
+      navigate("/index");
     } catch (error) {
       toast({
         title: "Login failed",
