@@ -17,6 +17,40 @@ const PostCard = ({ post }: PostCardProps) => {
   const [likeCount, setLikeCount] = useState(post.likes);
   
   const handleLike = () => {
+    // SUPABASE: Update likes in the database
+    // const updateLikes = async () => {
+    //   // If already liked, remove like
+    //   if (liked) {
+    //     const { error } = await supabase
+    //       .from('post_likes')
+    //       .delete()
+    //       .match({ user_id: currentUser.id, post_id: post.id });
+    //       
+    //     if (error) {
+    //       console.error('Error removing like:', error);
+    //       return;
+    //     }
+    //     
+    //     setLikeCount(likeCount - 1);
+    //   } else {
+    //     // If not liked, add like
+    //     const { error } = await supabase
+    //       .from('post_likes')
+    //       .insert([{ user_id: currentUser.id, post_id: post.id }]);
+    //       
+    //     if (error) {
+    //       console.error('Error adding like:', error);
+    //       return;
+    //     }
+    //     
+    //     setLikeCount(likeCount + 1);
+    //   }
+    //   
+    //   setLiked(!liked);
+    // };
+    //
+    // updateLikes();
+    
     if (liked) {
       setLikeCount(likeCount - 1);
     } else {

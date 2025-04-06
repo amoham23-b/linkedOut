@@ -32,6 +32,40 @@ const CreatePostCard = ({ onPostCreated }: CreatePostCardProps) => {
 
     setIsSubmitting(true);
     
+    // SUPABASE: Replace with actual post creation in Supabase
+    // const createPost = async () => {
+    //   const { data, error } = await supabase
+    //     .from('posts')
+    //     .insert([
+    //       {
+    //         content: content,
+    //         type: postType,
+    //         user_id: currentUser.id
+    //       }
+    //     ]);
+    //   
+    //   if (error) {
+    //     toast({
+    //       title: "Error creating post",
+    //       description: error.message,
+    //       variant: "destructive"
+    //     });
+    //     setIsSubmitting(false);
+    //     return;
+    //   }
+    //   
+    //   onPostCreated(content, postType);
+    //   setContent("");
+    //   setIsSubmitting(false);
+    //   
+    //   toast({
+    //     title: "Post created",
+    //     description: "Your post has been shared with the LinkedOut community."
+    //   });
+    // };
+    //
+    // createPost();
+    
     // Simulate network request
     setTimeout(() => {
       onPostCreated(content, postType);

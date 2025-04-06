@@ -9,6 +9,25 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 const Feed = () => {
   const [posts, setPosts] = useState<Post[]>(mockPosts);
 
+  // SUPABASE: Replace with real data fetching from Supabase
+  // useEffect(() => {
+  //   const fetchPosts = async () => {
+  //     const { data, error } = await supabase
+  //       .from('posts')
+  //       .select('*')
+  //       .order('createdAt', { ascending: false });
+  //     
+  //     if (error) {
+  //       console.error('Error fetching posts:', error);
+  //       return;
+  //     }
+  //     
+  //     setPosts(data);
+  //   };
+  //   
+  //   fetchPosts();
+  // }, []);
+
   const handleCreatePost = (content: string, type: PostType) => {
     const newPost: Post = {
       id: `post-${Date.now()}`,
@@ -19,6 +38,31 @@ const Feed = () => {
       likes: 0,
       comments: []
     };
+
+    // SUPABASE: Insert new post to Supabase DB
+    // const insertPost = async () => {
+    //   const { data, error } = await supabase
+    //     .from('posts')
+    //     .insert([
+    //       { 
+    //         content, 
+    //         type, 
+    //         user_id: currentUser.id,
+    //         created_at: new Date().toISOString()
+    //       }
+    //     ])
+    //     .select();
+    //   
+    //   if (error) {
+    //     console.error('Error creating post:', error);
+    //     return;
+    //   }
+    //   
+    //   // Update local state with the returned post that includes the DB-generated ID
+    //   setPosts([data[0], ...posts]);
+    // };
+    // 
+    // insertPost();
 
     setPosts([newPost, ...posts]);
   };
