@@ -1,13 +1,39 @@
-
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
-import { BriefcaseBusiness, Bell, MessageCircle, Search, User } from "lucide-react";
+import { BriefcaseBusiness, Bell, MessageCircle, Search, User, LogOut } from "lucide-react";
 import { currentUser } from "@/data/mockData";
 
 const Header = () => {
   const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  
+  // Check if user is logged in on component mount
+  useEffect(() => {
+    // In a real implementation, you would check localStorage, cookies,
+    // or a global state manager like Redux/Context to determine login status
+    const checkLoginStatus = () => {
+      // For now, we'll just use localStorage as an example
+      const loggedInStatus = localStorage.getItem("isLoggedIn");
+      setIsLoggedIn(loggedInStatus === "true");
+    };
+    
+    checkLoginStatus();
+  }, []);
+  
+  const handleAuthAction = () => {
+    if (isLoggedIn) {
+      // Handle logout
+      localStorage.setItem("isLoggedIn", "false");
+      setIsLoggedIn(false);
+      navigate("/");
+    } else {
+      // Navigate to login page
+      navigate("/login");
+    }
+  };
   
   return (
     <header className="bg-white border-b sticky top-0 z-50">
@@ -70,13 +96,22 @@ const Header = () => {
             </Button>
             
             <Button 
-              onClick={() => navigate("/login")} 
+              onClick={handleAuthAction} 
               variant="outline" 
               size="sm"
               className="hidden md:flex"
             >
-              <User size={16} className="mr-1" />
-              Login
+              {isLoggedIn ? (
+                <>
+                  <LogOut size={16} className="mr-1" />
+                  Logout
+                </>
+              ) : (
+                <>
+                  <User size={16} className="mr-1" />
+                  Login
+                </>
+              )}
             </Button>
           </div>
         </div>

@@ -12,9 +12,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { BriefcaseBusiness, MapPin, Camera, Plus, Trash2, Pencil } from "lucide-react";
-import ImageDropzone from "@/components/ImageDropzone";
+import { BriefcaseBusiness, MapPin, Plus, Trash2 } from "lucide-react";
 import { SupabaseContext } from "@/App";
+import ProfilePhotoInput from "@/components/ProfilePhotoInput";
 
 const EditProfile = () => {
   const [loading, setLoading] = useState(false);
@@ -80,29 +80,26 @@ const EditProfile = () => {
     fetchProfile();
   }, [supabase, navigate, toast]);
 
-  // Handle file change for profile picture upload.
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setProfilePicture(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewUrl(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
+  // Handle selection of a photo (either from camera or file upload)
+  const handlePhotoSelect = (file: File) => {
+    setProfilePicture(file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreviewUrl(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Clear the selected photo
+  const handleClearPhoto = () => {
+    setProfilePicture(null);
+    setPreviewUrl(profileData.photoURL);
   };
 
   // Handle input changes.
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setProfileData({ ...profileData, [name]: value });
-  };
-
-  // Handle skills input as comma-separated values.
-  const handleSkillsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const skills = e.target.value.split(",").map((skill) => skill.trim());
-    setProfileData({ ...profileData, skills });
   };
 
   const handleSkillChange = (index: number, value: string) => {
@@ -118,11 +115,6 @@ const EditProfile = () => {
   const removeSkill = (index: number) => {
     const updatedSkills = profileData.skills.filter((_, i) => i !== index);
     setProfileData({ ...profileData, skills: updatedSkills });
-  };
-
-  // Update photoURL when image is uploaded via dropzone.
-  const handlePhotoChange = (photoURL: string) => {
-    setProfileData({ ...profileData, photoURL });
   };
 
   // Handle form submission: update the profile.
@@ -211,25 +203,12 @@ const EditProfile = () => {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Profile Picture Upload */}
+              {/* Profile Picture Upload with Camera */}
               <div className="flex flex-col items-center mb-6">
-                <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden relative mb-2">
-                  {previewUrl ? (
-                    <img src={previewUrl} alt="Profile preview" className="w-full h-full object-cover" />
-                  ) : (
-                    <Camera size={32} className="text-gray-400" />
-                  )}
-                </div>
-                <label htmlFor="profile-picture" className="cursor-pointer text-linkedout-blue hover:underline flex items-center">
-                  <Camera size={16} className="mr-1" />
-                  {previewUrl ? "Change Photo" : "Upload Photo"}
-                </label>
-                <input
-                  id="profile-picture"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  className="hidden"
+                <ProfilePhotoInput 
+                  previewUrl={previewUrl}
+                  onPhotoSelect={handlePhotoSelect}
+                  onClear={handleClearPhoto}
                 />
               </div>
 
