@@ -63,7 +63,7 @@ const Header = () => {
           {/* Nav Icons */}
           <div className="flex items-center space-x-4">
             <Button 
-              onClick={() => navigate("/")} 
+              onClick={() => navigate("/messages")} 
               variant="ghost" 
               size="sm" 
               className="flex flex-col items-center text-xs"

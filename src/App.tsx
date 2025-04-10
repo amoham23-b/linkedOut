@@ -10,7 +10,9 @@ import SignUp from "./pages/SignUp";
 import ProfileCreation from "./pages/ProfileCreation";
 import EditProfile from "./pages/EditProfile";
 import NotFound from "./pages/NotFound";
+import MessagesPage from "./pages/MessagesPage";
 import { UserProvider } from "../context/UserContext";
+
 
 // Supabase client configuration
 import { createClient } from '@supabase/supabase-js';
@@ -40,6 +42,7 @@ const App = () => (
               <Route path="/signup" element={<SignUp />} />
               <Route path="/create-profile" element={<ProfileCreation />} />
               <Route path="/edit-profile" element={<EditProfile />} />
+              <Route path="/messages" element = {<MessagesPage />} />
               {/* ADD ALL CUSTOM ROUTES BELOW THE CATCH-ALL "*" ROUTE */}
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
