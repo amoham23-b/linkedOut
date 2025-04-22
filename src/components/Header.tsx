@@ -1,39 +1,84 @@
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { BriefcaseBusiness, Bell, MessageCircle, Search, User, LogOut } from "lucide-react";
-import { currentUser } from "@/data/mockData";
+import { useState, useEffect } from "react";
+import { logoutUser } from "@/utils/SupabaseUserUtil";
+import { supabase } from "@/App";
 
 const Header = () => {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState({});
   
-  // Check if user is logged in on component mount
   useEffect(() => {
-    // In a real implementation, you would check localStorage, cookies,
-    // or a global state manager like Redux/Context to determine login status
-    const checkLoginStatus = () => {
-      // For now, we'll just use localStorage as an example
-      const loggedInStatus = localStorage.getItem("isLoggedIn");
-      setIsLoggedIn(loggedInStatus === "true");
+    const loadUserData = async () => {
+      setLoading(true);
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError || !sessionData.session) {
+        console.log({
+          title: "Authentication Required",
+          description: "Please log in to view your profile",
+          variant: "destructive",
+        });
+        setIsLoggedIn(false);
+        setLoading(false);
+        return;
+      }
+      
+      const { data, error } = await supabase
+        .from('user_profiles')
+        .select('*')
+        .eq('uid', sessionData.session.user.id)
+        .single();
+      
+      setData(data);
+      setIsLoggedIn(true);
+      setLoading(false);
     };
     
-    checkLoginStatus();
+    loadUserData();
   }, []);
   
-  const handleAuthAction = () => {
-    if (isLoggedIn) {
-      // Handle logout
-      localStorage.setItem("isLoggedIn", "false");
+  const handleRefresh = async () => {
+    setLoading(true);
+    const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError || !sessionData.session) {
       setIsLoggedIn(false);
-      navigate("/");
+      setLoading(false);
+      return;
+    }
+    
+    const { data, error } = await supabase
+      .from('user_profiles')
+      .select('*')
+      .eq('uid', sessionData.session.user.id)
+      .single();
+    
+    setData(data);
+    setIsLoggedIn(true);
+    setLoading(false);
+  };
+  
+  const handleAuthAction = async () => {
+    if (isLoggedIn) {
+      const { success } = await logoutUser();
+      if (success) {
+        setData({});
+        setIsLoggedIn(false);
+        navigate("/");
+      }
     } else {
-      // Navigate to login page
       navigate("/login");
     }
   };
+  
+  // Get avatar url and display name, with fallbacks
+  const avatarUrl = data?.photo_url || "/default-avatar.png";
+  const displayName = data?.display_name || "User";
+  const initials = displayName.substring(0, 2).toUpperCase();
   
   return (
     <header className="bg-white border-b sticky top-0 z-50">
@@ -89,8 +134,13 @@ const Header = () => {
               className="flex flex-col items-center text-xs"
             >
               <Avatar className="h-7 w-7">
-                <AvatarImage src={currentUser.avatar} alt={currentUser.name} />
-                <AvatarFallback>{currentUser.name.substring(0, 2)}</AvatarFallback>
+                <AvatarImage 
+                  src={avatarUrl} 
+                  alt={displayName}
+                />
+                <AvatarFallback>
+                  {initials}
+                </AvatarFallback>
               </Avatar>
               <span>Profile</span>
             </Button>
